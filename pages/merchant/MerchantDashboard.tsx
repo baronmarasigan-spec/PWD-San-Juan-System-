@@ -377,7 +377,7 @@ export const MerchantDashboard: React.FC = () => {
               />
               <div>
                 <h1 className="text-2xl font-bold tracking-tight uppercase leading-none">
-                  Lungsog ng San Juan
+                  Dakilang Lungsod ng San Juan
                 </h1>
               </div>
            </div>
