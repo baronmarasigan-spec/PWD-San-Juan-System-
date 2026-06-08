@@ -604,7 +604,7 @@ export const MerchantDashboard: React.FC = () => {
           {/* Search Result view Modal Overlay */}
           {searched && (
             <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-              <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden w-full max-w-3xl relative animate-scale-up my-auto">
+              <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden w-full max-w-md relative animate-scale-up my-auto">
                 
                 {searchResult ? (
                   <div>
@@ -627,10 +627,10 @@ export const MerchantDashboard: React.FC = () => {
                       </button>
                     </div>
 
-                    <div className="p-6 sm:p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="p-6 sm:p-8 flex flex-col gap-6">
                       
                       {/* Identity card mock style */}
-                      <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl p-6 border border-slate-200/60 relative overflow-hidden flex flex-col justify-between h-auto min-h-[14rem] sm:min-h-[16rem] shadow-sm font-normal">
+                      <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl p-6 border border-slate-200/60 relative overflow-hidden flex flex-col justify-between h-auto min-h-[14rem] sm:min-h-[16rem] shadow-sm font-normal w-full">
                         <div className="absolute top-0 right-0 h-40 w-40 bg-[#1e419c]/5 rounded-full blur-2xl -z-1"></div>
                         
                         <div className="flex justify-between items-start">
@@ -667,53 +667,13 @@ export const MerchantDashboard: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Calculator Area */}
-                      <div className="space-y-5">
-                        <div className="bg-slate-50 p-4.5 rounded-xl border-l-4 border-slate-300">
-                           <h4 className="text-[10px] font-bold text-[#1e419c] uppercase tracking-wider">Calculate Benefit Claim</h4>
-                           <p className="text-[11px] text-slate-500 mt-0.5 leading-normal">Enter the total billing amount to auto-compute the standard 20% PWD discount.</p>
-                        </div>
-
-                        <div className="space-y-4 font-normal">
-                           <div className="space-y-1.5">
-                             <label className="text-[10px] font-medium text-slate-500 uppercase tracking-widest">Original Bill Amount (₱)</label>
-                             <input 
-                               type="number" 
-                               value={originalAmount}
-                               onChange={(e) => setOriginalAmount(e.target.value)}
-                               placeholder="e.g. 1500"
-                               className="w-full border border-slate-200 rounded-xl px-4 py-3.5 text-base font-bold text-slate-800 focus:border-[#1e419c] outline-none transition-all bg-white"
-                               min="0"
-                             />
-                           </div>
-
-                           {parseFloat(originalAmount) > 0 && (
-                             <div className="bg-slate-50 rounded-xl p-4.5 space-y-2 font-normal text-xs text-slate-600 border border-slate-100">
-                               <div className="flex justify-between">
-                                 <span>Gross Bill Total:</span>
-                                 <span>₱{(parseFloat(originalAmount) || 0).toFixed(2)}</span>
-                               </div>
-                               <div className="flex justify-between text-red-600 font-bold border-b border-slate-200/50 pb-2">
-                                 <span>PWD Discount (20% Off):</span>
-                                 <span>-₱{discountAmount.toFixed(2)}</span>
-                               </div>
-                               <div className="flex justify-between text-slate-900 font-extrabold text-sm pt-1">
-                                 <span>Final Amount to Pay:</span>
-                                 <span className="text-[#1e419c]">₱{finalAmount.toFixed(2)}</span>
-                               </div>
-                             </div>
-                           )}
-
-                           <button 
-                             type="button" 
-                             onClick={handleGrantDiscount}
-                             disabled={!originalAmount || parseFloat(originalAmount) <= 0}
-                             className="w-full bg-[#1e419c] hover:bg-[#122e70] disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold text-sm uppercase tracking-widest h-14 rounded-xl transition-all active:scale-[0.98] shadow flex items-center justify-center gap-2"
-                           >
-                             <Banknote size={18} /> Grant 20% Discount
-                           </button>
-                        </div>
-                      </div>
+                      <button 
+                        type="button" 
+                        onClick={() => { setSearched(false); }}
+                        className="w-full bg-[#1e419c] hover:bg-[#122e70] text-white font-bold text-sm uppercase tracking-widest h-12 rounded-xl transition-all active:scale-[0.98] shadow flex items-center justify-center gap-2"
+                      >
+                        Done & Close
+                      </button>
 
                     </div>
                   </div>
