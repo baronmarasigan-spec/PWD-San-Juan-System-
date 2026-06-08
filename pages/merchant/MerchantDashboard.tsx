@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import { 
   LogOut, CheckCircle2, XCircle, Search, 
-  Banknote, AlertCircle, ShieldAlert, QrCode, Camera
+  Banknote, AlertCircle, ShieldAlert, QrCode, Camera, X
 } from 'lucide-react';
 import { Html5Qrcode } from 'html5-qrcode';
 
@@ -600,131 +600,152 @@ export const MerchantDashboard: React.FC = () => {
                    💡 Tip: You can query using the citizen's PWD Digitized ID code. Under local government codes, valid holders of approved cards are instantly authorized for merchant claims.
                 </p>
              </div>
-          </div>
-
-          {/* Search Result view Card */}
+                   </div>
+          {/* Search Result view Modal Overlay */}
           {searched && (
-            <div className="animate-scale-up">
-              {searchResult ? (
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                   {/* Verification status Banner */}
-                   <div className="bg-emerald-500 text-white px-6 py-4 flex items-center gap-3">
-                     <CheckCircle2 size={24} />
-                     <div>
-                       <span className="text-[10px] font-black uppercase tracking-widest text-[#d1fae5]">Realtime Registry Verification</span>
-                       <h3 className="text-sm font-extrabold uppercase leading-tight tracking-tight">PWD BENEFICIARY FOUND & CONFIRMED ACTIVE</h3>
-                     </div>
-                   </div>
+            <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+              <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden w-full max-w-3xl relative animate-scale-up my-auto">
+                
+                {searchResult ? (
+                  <div>
+                    {/* Verification status Banner */}
+                    <div className="bg-emerald-500 text-white px-6 py-4 flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <CheckCircle2 size={24} />
+                        <div>
+                          <span className="text-[10px] font-black uppercase tracking-widest text-[#d1fae5]">Realtime Registry Verification</span>
+                          <h3 className="text-sm font-extrabold uppercase leading-tight tracking-tight">PWD BENEFICIARY FOUND & CONFIRMED ACTIVE</h3>
+                        </div>
+                      </div>
+                      <button 
+                        type="button"
+                        onClick={() => { setSearched(false); setOriginalAmount(''); }} 
+                        className="text-white hover:text-emerald-150 p-1.5 rounded-lg bg-emerald-600/30 hover:bg-emerald-600/50 transition-colors"
+                        title="Close Verification"
+                      >
+                        <X size={20} />
+                      </button>
+                    </div>
 
-                   <div className="p-6 sm:p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-                     
-                     {/* Identity card mock style */}
-                     <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl p-6 border border-slate-200/60 relative overflow-hidden flex flex-col justify-between h-auto min-h-[14rem] sm:min-h-[16rem] shadow-sm font-normal">
-                       <div className="absolute top-0 right-0 h-40 w-40 bg-[#1e419c]/5 rounded-full blur-2xl -z-1"></div>
-                       
-                       <div className="flex justify-between items-start">
-                         <div>
-                           <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">San Juan Digitized ID</p>
-                           <p className="text-xl font-extrabold text-slate-900 mt-1">{searchResult.name}</p>
-                         </div>
-                         <div className="bg-emerald-100 text-emerald-800 text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">
-                           Active
-                         </div>
-                       </div>
-
-                       <div className="space-y-3 mt-4">
-                         <div>
-                           <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none">PWD Control ID</p>
-                           <p className="text-md font-mono font-bold text-[#1e419c] leading-normal">{searchResult.pwdIdNumber}</p>
-                         </div>
-                         <div className="grid grid-cols-2 gap-4">
-                           <div>
-                             <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none">Barangay Residence</p>
-                             <p className="text-xs font-semibold text-slate-700 leading-normal">{searchResult.barangay}</p>
-                           </div>
-                           <div>
-                             <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none">Expiration Date</p>
-                             <p className="text-xs font-semibold text-slate-700 leading-normal font-mono text-[#dc2626]">
-                               {formatExpiryDate(searchResult.expiryDate)}
-                             </p>
-                           </div>
-                         </div>
-                         <div>
-                           <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none">Disability Category</p>
-                           <p className="text-xs font-semibold text-slate-707 leading-normal text-slate-700">{searchResult.disabilityType}</p>
-                         </div>
-                       </div>
-                     </div>
-
-                     {/* Calculator Area */}
-                     <div className="space-y-5">
-                       <div className="bg-slate-50 p-4.5 rounded-xl border-l-4 border-slate-300">
-                          <h4 className="text-[10px] font-bold text-[#1e419c] uppercase tracking-wider">Calculate Benefit Claim</h4>
-                          <p className="text-[11px] text-slate-500 mt-0.5 leading-normal">Enter the total billing amount to auto-compute the standard 20% PWD discount.</p>
-                       </div>
-
-                       <div className="space-y-4 font-normal">
-                          <div className="space-y-1.5">
-                            <label className="text-[10px] font-medium text-slate-500 uppercase tracking-widest">Original Bill Amount (₱)</label>
-                            <input 
-                              type="number" 
-                              value={originalAmount}
-                              onChange={(e) => setOriginalAmount(e.target.value)}
-                              placeholder="e.g. 1500"
-                              className="w-full border border-slate-200 rounded-xl px-4 py-3.5 text-base font-bold text-slate-800 focus:border-[#1e419c] outline-none transition-all bg-white"
-                              min="0"
-                            />
+                    <div className="p-6 sm:p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                      
+                      {/* Identity card mock style */}
+                      <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl p-6 border border-slate-200/60 relative overflow-hidden flex flex-col justify-between h-auto min-h-[14rem] sm:min-h-[16rem] shadow-sm font-normal">
+                        <div className="absolute top-0 right-0 h-40 w-40 bg-[#1e419c]/5 rounded-full blur-2xl -z-1"></div>
+                        
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">San Juan Digitized ID</p>
+                            <p className="text-xl font-extrabold text-slate-900 mt-1">{searchResult.name}</p>
                           </div>
+                          <div className="bg-emerald-100 text-emerald-800 text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">
+                            Active
+                          </div>
+                        </div>
 
-                          {parseFloat(originalAmount) > 0 && (
-                            <div className="bg-slate-50 rounded-xl p-4.5 space-y-2 font-normal text-xs text-slate-600 border border-slate-100">
-                              <div className="flex justify-between">
-                                <span>Gross Bill Total:</span>
-                                <span>₱{(parseFloat(originalAmount) || 0).toFixed(2)}</span>
-                              </div>
-                              <div className="flex justify-between text-red-600 font-bold border-b border-slate-200/50 pb-2">
-                                <span>PWD Discount (20% Off):</span>
-                                <span>-₱{discountAmount.toFixed(2)}</span>
-                              </div>
-                              <div className="flex justify-between text-slate-900 font-extrabold text-sm pt-1">
-                                <span>Final Amount to Pay:</span>
-                                <span className="text-[#1e419c]">₱{finalAmount.toFixed(2)}</span>
-                              </div>
+                        <div className="space-y-3 mt-4">
+                          <div>
+                            <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none">PWD Control ID</p>
+                            <p className="text-md font-mono font-bold text-[#1e419c] leading-normal">{searchResult.pwdIdNumber}</p>
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none">Barangay Residence</p>
+                              <p className="text-xs font-semibold text-slate-707 leading-normal text-slate-700">{searchResult.barangay}</p>
                             </div>
-                          )}
+                            <div>
+                              <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none">Expiration Date</p>
+                              <p className="text-xs font-semibold text-slate-707 leading-normal font-mono text-[#dc2626]">
+                                {formatExpiryDate(searchResult.expiryDate)}
+                              </p>
+                            </div>
+                          </div>
+                          <div>
+                            <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none">Disability Category</p>
+                            <p className="text-xs font-semibold text-slate-707 leading-normal text-slate-700">{searchResult.disabilityType}</p>
+                          </div>
+                        </div>
+                      </div>
 
-                          <button 
-                            type="button" 
-                            onClick={handleGrantDiscount}
-                            disabled={!originalAmount || parseFloat(originalAmount) <= 0}
-                            className="w-full bg-[#1e419c] hover:bg-[#122e70] disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold text-sm uppercase tracking-widest h-14 rounded-xl transition-all active:scale-[0.98] shadow flex items-center justify-center gap-2"
-                          >
-                            <Banknote size={18} /> Grant 20% Discount
-                          </button>
-                       </div>
-                     </div>
+                      {/* Calculator Area */}
+                      <div className="space-y-5">
+                        <div className="bg-slate-50 p-4.5 rounded-xl border-l-4 border-slate-300">
+                           <h4 className="text-[10px] font-bold text-[#1e419c] uppercase tracking-wider">Calculate Benefit Claim</h4>
+                           <p className="text-[11px] text-slate-500 mt-0.5 leading-normal">Enter the total billing amount to auto-compute the standard 20% PWD discount.</p>
+                        </div>
 
-                   </div>
-                </div>
-              ) : (
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 sm:p-12 text-center max-w-lg mx-auto space-y-5 animate-scale-up">
-                  <div className="w-16 h-16 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto">
-                    <ShieldAlert size={36} />
+                        <div className="space-y-4 font-normal">
+                           <div className="space-y-1.5">
+                             <label className="text-[10px] font-medium text-slate-500 uppercase tracking-widest">Original Bill Amount (₱)</label>
+                             <input 
+                               type="number" 
+                               value={originalAmount}
+                               onChange={(e) => setOriginalAmount(e.target.value)}
+                               placeholder="e.g. 1500"
+                               className="w-full border border-slate-200 rounded-xl px-4 py-3.5 text-base font-bold text-slate-800 focus:border-[#1e419c] outline-none transition-all bg-white"
+                               min="0"
+                             />
+                           </div>
+
+                           {parseFloat(originalAmount) > 0 && (
+                             <div className="bg-slate-50 rounded-xl p-4.5 space-y-2 font-normal text-xs text-slate-600 border border-slate-100">
+                               <div className="flex justify-between">
+                                 <span>Gross Bill Total:</span>
+                                 <span>₱{(parseFloat(originalAmount) || 0).toFixed(2)}</span>
+                               </div>
+                               <div className="flex justify-between text-red-600 font-bold border-b border-slate-200/50 pb-2">
+                                 <span>PWD Discount (20% Off):</span>
+                                 <span>-₱{discountAmount.toFixed(2)}</span>
+                               </div>
+                               <div className="flex justify-between text-slate-900 font-extrabold text-sm pt-1">
+                                 <span>Final Amount to Pay:</span>
+                                 <span className="text-[#1e419c]">₱{finalAmount.toFixed(2)}</span>
+                               </div>
+                             </div>
+                           )}
+
+                           <button 
+                             type="button" 
+                             onClick={handleGrantDiscount}
+                             disabled={!originalAmount || parseFloat(originalAmount) <= 0}
+                             className="w-full bg-[#1e419c] hover:bg-[#122e70] disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold text-sm uppercase tracking-widest h-14 rounded-xl transition-all active:scale-[0.98] shadow flex items-center justify-center gap-2"
+                           >
+                             <Banknote size={18} /> Grant 20% Discount
+                           </button>
+                        </div>
+                      </div>
+
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                     <h3 className="text-lg font-bold text-red-700 uppercase tracking-tight">PWD ID NOT FOUND</h3>
-                     <p className="text-slate-500 text-sm leading-relaxed font-normal">
-                       We could not locate any approved PWD record in the city register matching <strong className="text-slate-800 font-mono">"{searchId}"</strong>. Please verify the ID card number or guide them to complete modern registration at the San Juan PDAO office.
-                     </p>
+                ) : (
+                  <div className="bg-white rounded-2xl p-8 sm:p-12 text-center max-w-lg mx-auto space-y-5 relative">
+                    <button 
+                      type="button"
+                      onClick={() => { setSearched(false); }} 
+                      className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5 rounded-full hover:bg-slate-100 transition-all"
+                      title="Close Window"
+                    >
+                      <X size={20} />
+                    </button>
+                    <div className="w-16 h-16 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto">
+                      <ShieldAlert size={36} />
+                    </div>
+                    <div className="space-y-2">
+                       <h3 className="text-lg font-bold text-red-700 uppercase tracking-tight">PWD ID NOT FOUND</h3>
+                       <p className="text-slate-500 text-sm leading-relaxed font-normal">
+                         We could not locate any approved PWD record in the city register matching <strong className="text-slate-800 font-mono">"{searchId}"</strong>. Please verify the ID card number or guide them to complete modern registration at the San Juan PDAO office.
+                       </p>
+                    </div>
+                    <button 
+                      type="button"
+                      onClick={() => { setSearchId(''); setSearched(false); setCameraScanning(false); }}
+                      className="bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold px-6 py-2.5 rounded-xl text-xs uppercase tracking-wider transition-all"
+                    >
+                      Clear & Dismiss
+                    </button>
                   </div>
-                  <button 
-                    onClick={() => { setSearchId(''); setSearched(false); setCameraScanning(false); }}
-                    className="bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold px-6 py-2.5 rounded-xl text-xs uppercase tracking-wider transition-all"
-                  >
-                    Clear Search
-                  </button>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           )}
 
