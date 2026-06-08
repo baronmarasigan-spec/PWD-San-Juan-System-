@@ -366,17 +366,17 @@ export const MerchantDashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans flex flex-col">
-      {/* Header section styled with solid brand blue to match San Juan designs */}
-      <header className="bg-[#1e419c] text-white shadow-md w-full shrink-0">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-           <div className="flex items-center gap-3">
+      {/* Header section styled with deep slate blue */}
+      <header className="bg-gradient-to-r from-[#1e419c] to-[#122e70] text-white shadow-md">
+        <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+           <div className="flex items-center gap-4">
               <img 
                 src="https://dev2.phoenix.com.ph/wp-content/uploads/2025/12/Seal_of_San_Juan_Metro_Manila.png" 
                 alt="City Seal" 
-                className="h-12 w-auto object-contain drop-shadow" 
+                className="h-14 w-auto drop-shadow" 
               />
               <div>
-                <h1 className="text-xl font-bold tracking-tight uppercase leading-none">
+                <h1 className="text-2xl font-bold tracking-tight uppercase leading-none">
                   Dakilang Lungsod ng San Juan
                 </h1>
               </div>
@@ -387,7 +387,7 @@ export const MerchantDashboard: React.FC = () => {
                logout();
                navigate('/');
              }}
-             className="bg-white/10 hover:bg-white/20 transition-all font-semibold uppercase text-xs tracking-wider px-5 py-2.5 rounded-lg flex items-center gap-2 border border-white/10"
+             className="bg-white/10 hover:bg-white/20 transition-all font-semibold uppercase text-xs tracking-wider px-5 py-3 rounded-lg flex items-center gap-2 border border-white/10"
            >
               <LogOut size={16} /> Exit Terminal
            </button>
